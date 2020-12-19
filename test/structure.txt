@@ -1,0 +1,16 @@
+1. data import
+2. cleaning and extract information
+
+3. individual cut scores
+	1. counts and weights
+	2. smallest counts or weights
+
+
+4. modal and median method
+	1. manually change cut pages
+
+#### 여기까지가 핵심 ####
+	
+5. 각종 표 만들기
+
+
