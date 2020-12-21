@@ -621,13 +621,13 @@ imprt_data <-
   #   output$pagetb <-
   #     renderText({
   #       page_data <- tab3$eff_page %>% data.frame()
-  # 
+  #
   #       forline <- page_data %>% pull(1) %>% unique() %>% length()
   #       kable.line <- 1:forline
   #       for(fl in 1:forline){
   #         kable.line[fl] <- 5*fl + 0
   #       }
-  # 
+  #
   #       for_report$effpage <-
   #         page_data %>%
   #         kable(.,"html", escape = F, align = "c",
@@ -643,16 +643,16 @@ imprt_data <-
   #                   extra_css = "border-bottom: 1px solid") %>%
   #         collapse_rows(columns = 1:2, valign = "top") %>%
   #         row_spec(., kable.line, extra_css = "border-bottom: 1px solid")
-  # 
+  #
   #       for_report$effpage
-  # 
+  #
   #       })
   # })
-  # 
+  #
   # observeEvent(input$run_tab1,
   # {
   #   output$pagePlot1 <- renderPlot({
-  # 
+  #
   #   tab3$p_page1 <-
   #       tab3$scale_scores %>%
   #       ggplot() +
@@ -665,11 +665,11 @@ imprt_data <-
   #            y = "Scale Score Cut Scores") +
   #       theme_bw(base_size = 20) +
   #       scale_color_brewer(palette="Paired")
-  # 
+  #
   #     tab3$p_page1
   #   })
   #   output$pagePlot2 <- renderPlot({
-  # 
+  #
   #     tab3$p_page2 <-
   #         tab3$perc_ins %>%
   #         mutate(Level = factor(Level),
@@ -685,11 +685,11 @@ imprt_data <-
   #              y =  "Percentage in Level") +
   #         theme_bw(base_size = 20) +
   #         scale_fill_brewer(palette="Paired")
-  # 
+  #
   #       tab3$p_page2
   #   })
   #   output$pagePlot3 <- renderPlot({
-  # 
+  #
   #     tab3$p_page3 <-
   #         tab3$perc_atabos %>%
   #         ggplot() +
@@ -699,12 +699,12 @@ imprt_data <-
   #         geom_text(aes(label = percAtabo,
   #                       x = GCA, y = percAtabo, group = Level), size = 6,
   #         vjust = 1) +
-  # 
+  #
   #         labs(title = "Percentage At or Above Cut Score",
   #              y = "Percentage At or Above Cut Score") +
   #         theme_bw(base_size = 20) +
   #         scale_color_brewer(palette="Paired")
-  # 
+  #
   #       tab3$p_page3
   #   })
   # })
@@ -720,36 +720,36 @@ imprt_data <-
     n.of.tb <- rep(1, length(n.of.gca))
 
     loc_nm <- information$base_data$loc_nm
-    
+
     for_tab2_out <- tab2$for_tab2_out
-    
+
     level_names <- names(tab3$eff_page)[-c(1:3)]
-    
+
     SD <- information$data_ready$SD_data
-                 
+
     cs_inf <-
       tab1$modal_res_all %>%
       select(GCA, ends_with("_loc")) %>%
       set_names(., nm = c("GCA", level_names)) %>%
       gather(., "ALD", "Cut_Score", -GCA)
-    
-    item_review_table <- 
+
+    item_review_table <-
       foreach(vi = 1:length(n.of.gca), .combine = 'rbind') %do% {
         # vi = 2
-        
+
         cutpoint_inp <- tab1$modal_selected_cp_all[[vi]]
-        
+
         dataUse_1 <- for_tab2_out[[vi]][[1]][["t_out"]]
-        
+
         dataUse_Weight <-
           dataUse_1 %>%
           mutate(
             weightSum = dplyr::select(., ends_with("_W")) %>%
               rowSums()
           ) %>% pull(weightSum)
-        
+
         target_names <- dataUse_1$ALD
-        
+
         lv_name <- target_names %>% unique() %>% sort()
         #
         given_n <- c(1:length(lv_name))
@@ -763,41 +763,41 @@ imprt_data <-
             # cr = 3
             cr_abo <- cr
             cr_bel <- cr
-            
+
             c_bel <- which(targets_n[0:(cr - 1)] >= n)
             c_abo <- (which(targets_n[cr_abo:er] < n) - 1) + cr_abo
-            
+
             dataUse_1[c(c_bel, c_abo), ]
           }
         all_names <- names(review_table)
         review_table <- review_table %>% distinct(!!!syms(all_names))
-        review_table <- 
-          review_table %>% 
+        review_table <-
+          review_table %>%
           select(-Round) %>%
           mutate(.,
                  Weight = dplyr::select(., ends_with("_W")) %>%
                    rowSums()
           )
-      } 
-                 
+      }
+
       cs_inf_upper <-
-        cs_inf %>% 
+        cs_inf %>%
         mutate(
           ALD = extract_num(ALD),
           ALD = paste0("Level", (ALD - 1))
-        ) %>% 
+        ) %>%
         rename(
           "Cut_Score_upper" = "Cut_Score"
         )
-                 
-     item_review_table <- 
-       item_review_table %>% 
+
+     item_review_table <-
+       item_review_table %>%
        left_join(., cs_inf, by = c("GCA" = "GCA",
                                    "ALD" = "ALD")) %>%
        left_join(., cs_inf_upper, by = c("GCA" = "GCA",
                                    "ALD" = "ALD")) %>%
        left_join(., SD, by = c("GCA" = "GCAid")) %>%
-       
+
        mutate(AN = extract_num(ALD),
               ON = extract_num(Operational_Lv),
               Diff_LV = AN - ON,
@@ -807,7 +807,7 @@ imprt_data <-
                 ),
               `Std. Distance` = round(Distance / SD, 3)
          ) %>%
-       
+
        select(-matches("L[[:digit:]]+"), -AN, -ON) %>%
        select(
          GCA, Item_ID, OOD,
@@ -816,11 +816,11 @@ imprt_data <-
          Distance,`Std. Distance`) %>%
        rename(
          "Aligned_ALD" = "ALD"
-       ) %>% 
+       ) %>%
        arrange(
          GCA, Item_ID
        )
-       
+
       tab4$for_tab4_out <- item_review_table
   # })
 
@@ -910,8 +910,8 @@ imprt_data <-
       type = "success"
     )
   })
-  
-  
+
+
   output$report <- downloadHandler(
     filename = function() {
       paste("Report_",Sys.Date(), ".docx", sep = "")
@@ -923,18 +923,18 @@ imprt_data <-
         {
           file_docx <- tempfile(fileext = ".docx")
           for_tab2_out <- tab2$for_tab2_out
-          
+
           shiny::incProgress(1/10)
           Sys.sleep(1)
           shiny::incProgress(5/10)
-          
+
           word_out3(file_docx, reportTables = reportTables,
             for_tab2_out = for_tab2_out, tab3 = tab3)
-          
+
           Sys.sleep(1)
           shiny::incProgress(4/10)
           Sys.sleep(1)
-          
+
           file.rename( from = file_docx, to = file )
         }
       )

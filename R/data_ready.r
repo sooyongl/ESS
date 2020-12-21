@@ -11,7 +11,7 @@ NULL
 #' filePath <- "data/freq_data.xlsx"
 #' imported_data <- read_data(filePath)
 #' }
-#' @export
+#'
 read_data <- function(filePath) {
   imprt_data <-
     filePath %>%
@@ -34,8 +34,8 @@ read_data <- function(filePath) {
 #' data_list <- data_ready(imported_data)
 #' }
 #' @export
-data_ready <- function(imprtData) { # imprtData = imprt_data
-
+data_ready <- function(filePath) { # imprtData = imprt_data
+  imprtData <- read_data(filePath)
   setup_data    <- imprtData[[1]]
   panelist_data <- imprtData[[2]]
   rating_data   <- imprtData[[3]]
@@ -133,12 +133,12 @@ get_data_info <- # readyData <- data_list; inputs <- list(grade = c("M3"), ald =
     )
 
   # information$base_data <-
-  information$given_data <-
+  information$base_data <-
     list(
       target_nm     = inputs[["ald"]],
       loc_nm        = inputs[["location"]],
-      WESS_nm       = inputs[["wess"]],
-      modal_nm      = inputs[["modal"]],
+      WESS          = inputs[["wess"]],
+      modal         = inputs[["modal"]],
       threshold     = inputs[["threshold"]],
       filtered_data = filtered_data
     )
@@ -158,9 +158,9 @@ get_data_info <- # readyData <- data_list; inputs <- list(grade = c("M3"), ald =
   return(information)
   }
 
-###############################################################################
+##################
 # Helper functions
-#------------------------------------------------------------------------------
+#------------------
 #' remove_blank_vector
 #'
 remove_blank <- function(inpData) {
