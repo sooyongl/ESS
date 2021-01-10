@@ -1,55 +1,126 @@
-estCutScore <- function(inpData, information) {
-  # inpData = information$split_data[[1]];
-  locInf <- information$data_ready$location_ready
-  levelNm_list <- information$data_ready$level_nm
-  WESS <- information$base_data$WESS
+estCutScore <- function(information) {
+  #
+  est_cutscore <-
+    foreach(inpData = information$split_data) %do% {
 
-  SD_data <- information$data_ready$SD_data
-  threshold_data <- information$base_data$threshold
+      GCA_data <- inpData
 
-  GCA_data <- inpData
+      locInf <- information$data_ready$location_ready
+      levelNm_list <- information$data_ready$level_nm
+      WESS <- information$base_data$WESS
 
-  need_data <- data_prep(GCA_data, levelNm_list, locInf)
-  for(ai in seq_along(names(need_data))) {
-    assign(names(need_data)[ai], need_data[[ai]])
-  }
-  locnm <- names(location)[3]
-  ald_vector <- remove_blank(data_1 %>% pull(ALD) )
-  lv_vector <- remove_blank(level_nm)
+      SD_data <- information$data_ready$SD_data
+      threshold_data <- information$base_data$threshold
 
-  SD_inp <- SD_data %>% filter(GCAid == test_id) %>% pull(SD)
-  #est Cut page
-  cut_scores <-
-    cal_cs(lv_vector, ald_vector, location, threshold_data)
+      need_data <- data_prep(GCA_data, levelNm_list, locInf)
+      for(ai in seq_along(names(need_data))) {
+        assign(names(need_data)[ai], need_data[[ai]])
+      }
+      locnm <- names(location)[3]
+      ald_vector <- remove_blank(data_1 %>% pull(ALD) )
+      lv_vector <- remove_blank(level_nm)
 
-  cutPoint <- cal_minp(cut_scores)
-  selected_CP <- select_cp(cutPoint, cut_scores, WESS)
+      SD_inp <- SD_data %>% filter(GCAid == test_id) %>% pull(SD)
+      #est Cut page
+      cut_scores <-
+        cal_cs(lv_vector, ald_vector, location, threshold_data)
 
-  cutPoint$weight <- round(cutPoint$weight / SD_inp, 2)
+      cutPoint <- cal_minp(cut_scores)
+      selected_CP <- select_cp(cutPoint, cut_scores, WESS)
 
-  data_2 <-
-    cut_scores %>%
-    bind_cols(data_1, bind_loc, .) %>%
-    relocate(., OOD, !!as.name(locnm), .after = Item_ID)
+      cutPoint$weight <- round(cutPoint$weight / SD_inp, 2)
 
-  op_num <- rep(0, nrow(inpData))
-  op_num[ selected_CP  ] <- 1
-  Operational_name <- get_opname1(inpData, lv_vector, op_num)
+      data_2 <-
+        cut_scores %>%
+        bind_cols(data_1, bind_loc, .) %>%
+        relocate(., OOD, !!as.name(locnm), .after = Item_ID)
 
-  loc_num <- data_2 %>% pull(locnm)
-  ald_num <- match(ald_vector, lv_vector)
+      op_num <- rep(0, nrow(inpData))
+      op_num[ selected_CP  ] <- 1
+      Operational_name <- get_opname1(inpData, lv_vector, op_num)
 
-  cor_inc <- cor(ald_num, loc_num)
+      loc_num <- data_2 %>% pull(locnm)
+      ald_num <- match(ald_vector, lv_vector)
 
-  data_3 <-
-    data_2 %>%
-    mutate(
-      Operational_Lv = Operational_name,
-      Correlation = cor_inc
-    ) %>%
-    mutate_at(vars(ends_with("_W")), ~ round(./SD_inp,2))
-  return(list(est_cs = data_3, est_cp = cutPoint,selected_CP = selected_CP))
+      cor_inc <- cor(ald_num, loc_num)
+
+      data_3 <-
+        data_2 %>%
+        mutate(
+          Operational_Lv = Operational_name,
+          Correlation = cor_inc
+        ) %>%
+        mutate_at(vars(ends_with("_W")), ~ round(./SD_inp,2))
+      return(list(est_cs = data_3, est_cp = cutPoint,selected_CP = selected_CP))
+
+  } %>%
+  set_names(.,
+    nm = information$data_ready$id_list[["PanelID"]] %>%
+      filter(GCA %in% information$data_ready$id_list$GCA) %>%
+      pull(3) %>% unique()
+  )
+
+  est_cs <- map(est_cutscore, ~ .x$est_cs)
+  est_cp <- map(est_cutscore, ~ .x$est_cp)
+  selected_CP <- map(est_cutscore, ~ .x$selected_CP)
+
+  tab0 <- list(est_cs = est_cs, est_cp = est_cp, selected_CP = selected_CP)
+
+  return(tab0)
 }
+# estCutScore <- function(inpData, information) {
+#   # inpData = information$split_data[[1]];
+#
+#   GCA_data <- inpData
+#
+#   locInf <- information$data_ready$location_ready
+#   levelNm_list <- information$data_ready$level_nm
+#   WESS <- information$base_data$WESS
+#
+#   SD_data <- information$data_ready$SD_data
+#   threshold_data <- information$base_data$threshold
+#
+#   need_data <- data_prep(GCA_data, levelNm_list, locInf)
+#   for(ai in seq_along(names(need_data))) {
+#     assign(names(need_data)[ai], need_data[[ai]])
+#   }
+#   locnm <- names(location)[3]
+#   ald_vector <- remove_blank(data_1 %>% pull(ALD) )
+#   lv_vector <- remove_blank(level_nm)
+#
+#   SD_inp <- SD_data %>% filter(GCAid == test_id) %>% pull(SD)
+#   #est Cut page
+#   cut_scores <-
+#     cal_cs(lv_vector, ald_vector, location, threshold_data)
+#
+#   cutPoint <- cal_minp(cut_scores)
+#   selected_CP <- select_cp(cutPoint, cut_scores, WESS)
+#
+#   cutPoint$weight <- round(cutPoint$weight / SD_inp, 2)
+#
+#   data_2 <-
+#     cut_scores %>%
+#     bind_cols(data_1, bind_loc, .) %>%
+#     relocate(., OOD, !!as.name(locnm), .after = Item_ID)
+#
+#   op_num <- rep(0, nrow(inpData))
+#   op_num[ selected_CP  ] <- 1
+#   Operational_name <- get_opname1(inpData, lv_vector, op_num)
+#
+#   loc_num <- data_2 %>% pull(locnm)
+#   ald_num <- match(ald_vector, lv_vector)
+#
+#   cor_inc <- cor(ald_num, loc_num)
+#
+#   data_3 <-
+#     data_2 %>%
+#     mutate(
+#       Operational_Lv = Operational_name,
+#       Correlation = cor_inc
+#     ) %>%
+#     mutate_at(vars(ends_with("_W")), ~ round(./SD_inp,2))
+#   return(list(est_cs = data_3, est_cp = cutPoint,selected_CP = selected_CP))
+# }
 #'
 cal_cs <-
   function(lvVec, aldVec, loc_data, threshold){

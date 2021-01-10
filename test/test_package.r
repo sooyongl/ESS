@@ -38,18 +38,19 @@ information <-
   )
 
 ####################################################
-tab0 <- list()
-tab0$est_cutscore <-
-  map(information$split_data, estCutScore, information) %>%
-  set_names(.,
-    nm = information$data_ready$id_list[["PanelID"]] %>%
-      filter(GCA %in% information$data_ready$id_list$GCA) %>%
-      pull(3) %>% unique()
-  )
-
-tab0$est_cs <- map(tab0$est_cutscore, ~ .x$est_cs)
-tab0$est_cp <- map(tab0$est_cutscore, ~ .x$est_cp)
-tab0$selected_CP <- map(tab0$est_cutscore, ~ .x$selected_CP)
+# tab0 <- list()
+tab0 <- estCutScore(information)
+# tab0$est_cutscore <-
+#   map(information$split_data, estCutScore, information) %>%
+#   set_names(.,
+#     nm = information$data_ready$id_list[["PanelID"]] %>%
+#       filter(GCA %in% information$data_ready$id_list$GCA) %>%
+#       pull(3) %>% unique()
+#   )
+#
+# tab0$est_cs <- map(tab0$est_cutscore, ~ .x$est_cs)
+# tab0$est_cp <- map(tab0$est_cutscore, ~ .x$est_cp)
+# tab0$selected_CP <- map(tab0$est_cutscore, ~ .x$selected_CP)
 ####################################################
 tab1 <- list()
 tab1$res <-
