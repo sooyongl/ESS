@@ -1,5 +1,6 @@
 #' @include tab0_function.r
 #'
+#' tab1_group_out
 tab1_group_out <-
   function(inpData, selectedCp, WESS, modal = F){
 
@@ -58,6 +59,7 @@ tab1_group_out <-
   }
 #'
 #'
+#' tab1_group_out_all
 tab1_group_out_all <-
   function(inpData, selectedCp, WESS, modal = F){
     # inpData<- tab1$modal_est_cs_all[[1]];
@@ -108,6 +110,7 @@ tab1_group_out_all <-
     return(list(res = res))
   }
 
+#' gen_median_table_all
 gen_median_table_all <- function(tab1Res){
   # tab1Res <- tab1$res
   tt1 <-
@@ -168,7 +171,7 @@ gen_median_table_all <- function(tab1Res){
 
   return(median_table)
 }
-#
+#' estCutScore_mode_all
 estCutScore_mode_all <- function(data, information) {
 
   gcaid <- information$data_ready$id_list$GCA
@@ -216,7 +219,7 @@ estCutScore_mode_all <- function(data, information) {
       )
     return(mode_cs)
 }
-#
+#' gen_median_table
 gen_median_table <- function(tab1Res){
   # tab1Res <- tab1$res
   tt1 <-
@@ -276,7 +279,7 @@ gen_median_table <- function(tab1Res){
 
   return(median_table)
 }
-#
+#' gen_median_output
 gen_median_output <- function(medTable) {
 
   page_name <- names(medTable)[str_detect(names(medTable), "_p")]
@@ -301,7 +304,7 @@ gen_median_output <- function(medTable) {
       Table = if_else(Table == "0", "All", Table))
   return(median_out)
 }
-#
+#' estCutScore_mode
 estCutScore_mode <- function(data, information){
   # data = est_cutscore;information
   gcaid <- information$data_ready$id_list$GCA
@@ -352,7 +355,7 @@ estCutScore_mode <- function(data, information){
     )
   return(mode_cs)
 }
-#
+#' get_mode
 get_mode <- function(x, corInf){
   # x <- ext_ALD[1,]
   # corInf <- ext_cors
@@ -377,7 +380,7 @@ get_mode <- function(x, corInf){
     modal_ALD <- names(a2)[1]
   }
 }
-#
+#' estCutScore_mode_manual
 estCutScore_mode_manual <- function(data, information, manual_cutpoint) {
 
   gcaid <- information$data_ready$id_list$GCA
@@ -425,7 +428,7 @@ estCutScore_mode_manual <- function(data, information, manual_cutpoint) {
     )
   return(mode_cs)
 }
-#'
+#' estCutScore_manual
 estCutScore_manual <- function(inpData, manual_cutpoint, information) {
   # inpData = information$split_data[[1]];
   # inpData = split_filter[[1]];

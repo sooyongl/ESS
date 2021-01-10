@@ -1,5 +1,6 @@
 #' @include tab_function.r
-#'
+#' run_ESS
+#' @export
 run_ESS <- function(filePath, grade, ald, location, WESS, modal, threshold) {
 
   res_ess <- new("ess")
@@ -24,12 +25,12 @@ run_ESS <- function(filePath, grade, ald, location, WESS, modal, threshold) {
 
   return(res_ess)
 }
-
-update_ESS <- function(res_ess, manial_cp) {
-
-  # need to be fixed for update
-  # tab1 <- update_tab1(tab0, information, manual_cp)
-  # tab2 <- update_tab2(tab1, information)
-
-  return(res_ess)
-}
+#' run_ESS
+# update_ESS <- function(res_ess, manial_cp) {
+#
+#   # need to be fixed for update
+#   # tab1 <- update_tab1(tab0, information, manual_cp)
+#   # tab2 <- update_tab2(tab1, information)
+#
+#   return(res_ess)
+# }

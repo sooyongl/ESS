@@ -1,5 +1,5 @@
 #' @include tab2_function.r
-#'
+#' gen_page_data
 gen_page_data <- function(ep, datainp, fourthData, fifthData,
                           pageName, targetLoc, lvnm){
   # pageName <- page_name; targetLoc <- target_loc
@@ -49,12 +49,12 @@ gen_page_data <- function(ep, datainp, fourthData, fifthData,
     list(scale_scores = scale_scores,perc_ins = perc_ins,
          perc_atabos = perc_atabos, perc_bel = perc_bel))
 }
-
+#' freq_to_vec
 freq_to_vec = function(data) {
 
   rep(data$score, data$freq)
 }
-
+#' lv_por
 lv_por <-
   function(scores, locnum, minp){
     lv_first_por <-
@@ -82,7 +82,7 @@ lv_por <-
     list(pors = c(lv_first_por, lv_md_por, lv_last_por),
          atabv = atabv, bel = bel)
   }
-
+#' gen_blank_page
 gen_blank_page <-
   function(GCA, lvnm){
     # GCA = gca_nm; lvnm = information$data_ready$level_nm[[1]]
@@ -96,7 +96,7 @@ gen_blank_page <-
     }
     return(sum_table_1)
   }
-
+#' summarize_page
 summarize_page <-
   function(ep, blankPage, perIns, percAtabove, perBelow, minData, lvnm,
            numItem, locNum){

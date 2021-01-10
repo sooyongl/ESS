@@ -1,5 +1,5 @@
 #' @include tab1_function.r
-#'
+#' tab2_plot_data
 tab2_plot_data <- function(dataInp, information, vvv){
 
   dataUse_1 <- dataInp
@@ -35,7 +35,8 @@ tab2_plot_data <- function(dataInp, information, vvv){
   }
   return(dataUse_1)
 }
-#'
+
+#' tab2_plot
 
 tab2_plot <- function(dataUse, WESS){
 

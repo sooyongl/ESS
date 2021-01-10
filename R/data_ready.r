@@ -33,7 +33,7 @@ read_data <- function(filePath) {
 #' imported_data <- read_data(filePath)
 #' data_list <- data_ready(imported_data)
 #' }
-#' @export
+
 data_ready <- function(filePath) { # imprtData = imprt_data
   imprtData <- read_data(filePath)
   setup_data    <- imprtData[[1]]
@@ -79,7 +79,7 @@ data_ready <- function(filePath) { # imprtData = imprt_data
   rating_data[[ald_position]] <- new_lv_name
 
   # item data
-  item_data <- item_data  %>% arrange(1,2)
+  item_data <- item_data  %>% arrange(GCA)
 
   # examinee data
   examinee_data <- reorganize_examinee(examinee_data)
@@ -108,7 +108,7 @@ data_ready <- function(filePath) { # imprtData = imprt_data
 #' data_information <- get_data_info(data_list, grade = c("M3"), ald = "ALD", location = "Loc_RP60", wess = F, modal = F, threshold = F)
 #'
 #' }
-#' @export
+
 get_data_info <- # readyData <- data_list; inputs <- list(grade = c("M3"), ald = "ALD", location = "Loc_RP60", wess = F, modal = F, threshold = F)
   function(readyData, ...){ # readyData <- data_list
 
@@ -128,7 +128,7 @@ get_data_info <- # readyData <- data_list; inputs <- list(grade = c("M3"), ald =
       setup_data     = readyData[[1]],
       panel_data     = readyData[[2]],
       rating_data    = readyData[[3]],
-      item_data      = readyData[[4]],
+      item_data      = readyData[[4]]%>% arrange(GCA, inputs[["location"]]),
       examinee_data  = readyData[[5]]
     )
 
@@ -161,15 +161,14 @@ get_data_info <- # readyData <- data_list; inputs <- list(grade = c("M3"), ald =
 ##################
 # Helper functions
 #------------------
-#' remove_blank_vector
-#'
+#' remove_blank
 remove_blank <- function(inpData) {
 
   vec <- inpData %>% stri_replace_all_charclass(., "\\p{WHITE_SPACE}", "")
   vec <- toupper(vec)
   return(vec)
 }
-#
+#' reorganize_examinee
 reorganize_examinee <- function(inpData){
     if(sum(str_detect(toupper(names(inpData)), toupper("freq"))) == 0){
 
@@ -197,7 +196,7 @@ reorganize_examinee <- function(inpData){
       return(inpdata_reorg)
     }
   }
-
+#' get_ID
 get_ID <- function(filteredData) {
 
   GCAID <-
@@ -220,7 +219,7 @@ get_ID <- function(filteredData) {
   return(list(GCA = GCAID, Table = TableID, Table_n = Table_n,
               PanelID = UserID))
 }
-#
+#' get_SD
 get_SD <- function(setupData, id_list){
   SD_data =
     tryCatch({
@@ -233,7 +232,7 @@ get_SD <- function(setupData, id_list){
 
   SD_data <- data.frame(GCAid = id_list$GCA, SD = SD_data)
 }
-#
+#' get_lvnm
 get_lvnm <- # inpData = level_nm0; GCAID = inputs[["grades"]]
   function(inpData, GCAID){
     .get_lvnm <-
@@ -252,7 +251,7 @@ get_lvnm <- # inpData = level_nm0; GCAID = inputs[["grades"]]
       data.frame() %>%
       set_names(., nm = GCAID)
   }
-#
+#' get_location
 get_location <- function(fourthData, locNm, testinp){
   # fourthData <- fourth_data; locNm <- input$loc
   dataUsed <- fourthData %>% filter(GCA %in% testinp)

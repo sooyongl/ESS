@@ -1,5 +1,6 @@
 #' @include tab4_function.r
 
+#' gen_tab0
 gen_tab0 <- function(information) {
   #
   data <- information$split_data
@@ -71,7 +72,7 @@ gen_tab0 <- function(information) {
 
   return(tab0)
 }
-#
+#' gen_tab1
 gen_tab1 <- function(tab0, information){
 
   tab1 <- list()
@@ -146,7 +147,7 @@ gen_tab1 <- function(tab0, information){
 
   return(tab1)
 }
-#'
+#' gen_tab2
 gen_tab2 <- function(tab1, information) {
 
   tab2 <- list()
@@ -196,7 +197,7 @@ gen_tab2 <- function(tab1, information) {
   return(tab2)
 }
 #'
-#'
+#' update_tab2
 update_tab2 <- function(tab0, information, manual_cp) {
 
   tab1 <- list()
@@ -230,7 +231,7 @@ update_tab2 <- function(tab0, information, manual_cp) {
   return(tab2)
 }
 
-#'
+#' gen_tab3
 
 gen_tab3 <- function(tab1, information) {
 
@@ -320,7 +321,7 @@ gen_tab3 <- function(tab1, information) {
 
   return(tab3)
 }
-#'
+#' gen_tab4
 gen_tab4 <- function(tab1, tab2, tab3, information){
 
   tab4 <- list()

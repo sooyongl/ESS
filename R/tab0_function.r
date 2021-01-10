@@ -1,3 +1,4 @@
+#' estCutScore
 estCutScore <- function(inpData, information) {
   # inpData = information$split_data[[1]];
 
@@ -51,7 +52,7 @@ estCutScore <- function(inpData, information) {
     mutate_at(vars(ends_with("_W")), ~ round(./SD_inp,2))
   return(list(est_cs = data_3, est_cp = cutPoint,selected_CP = selected_CP))
 }
-#'
+#' cal_cs
 cal_cs <-
   function(lvVec, aldVec, loc_data, threshold){
     # lvVec=lv_vector;aldVec=ald_vector;loc_data=location
@@ -130,7 +131,7 @@ cal_cs <-
 
     return(cutSC)
   }
-#
+#' cal_minp
 cal_minp <- function(dataInp) { # dataInp = cut_scores
   est_lev <- dataInp
   minimun_points <-
@@ -164,8 +165,8 @@ cal_minp <- function(dataInp) { # dataInp = cut_scores
   return(list(default = o.ver, weight = w.ver))
 }
 #'
-#'
-select_cp<-
+#' select_cp
+select_cp <-
   function(cutPoint, estCutscore, WESS){
     # cutPoint<-cut_point[[1]];estCutscore<-est_cutscore[[1]];
     # inputWESS<-WESS
@@ -204,7 +205,7 @@ select_cp<-
     return(ppp = ppp)
   }
 #'
-#'
+#' get_opname1
 get_opname1 <- function(datainp, lvname, opnum){
 
   efficacy_data_1 <- datainp # efficacy_data_1 <- est_cutscore[[i]]
@@ -230,7 +231,7 @@ get_opname1 <- function(datainp, lvname, opnum){
 
   return(Operational_name)
 }
-#'
+#' gen_indi_table
 gen_indi_table <- function(tab1Res) {
   # tab1Res <- tab1$res
   page_name <- names(tab1Res)[str_detect(names(tab1Res), "_p")]
@@ -282,7 +283,7 @@ gen_indi_table <- function(tab1Res) {
 # Helper functions
 #------------------
 #'
-#'
+#' data_prep
 data_prep <- function(inpData, lvNm, locInf){
   # fourthData <- fourth_data
   GCAId <- inpData %>% pull(GCA) %>% unique()
