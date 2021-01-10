@@ -38,21 +38,22 @@ information <-
   )
 
 ####################################################
-# tab0 <- list()
-tab0 <- estCutScore(information)
-# tab0$est_cutscore <-
-#   map(information$split_data, estCutScore, information) %>%
-#   set_names(.,
-#     nm = information$data_ready$id_list[["PanelID"]] %>%
-#       filter(GCA %in% information$data_ready$id_list$GCA) %>%
-#       pull(3) %>% unique()
-#   )
-#
-# tab0$est_cs <- map(tab0$est_cutscore, ~ .x$est_cs)
-# tab0$est_cp <- map(tab0$est_cutscore, ~ .x$est_cp)
-# tab0$selected_CP <- map(tab0$est_cutscore, ~ .x$selected_CP)
+tab0 <- list()
+# tab0 <- estCutScore(information$split_data, information)
+tab0$est_cutscore <-
+  map(information$split_data, estCutScore, information) %>%
+  set_names(.,
+    nm = information$data_ready$id_list[["PanelID"]] %>%
+      filter(GCA %in% information$data_ready$id_list$GCA) %>%
+      pull(3) %>% unique()
+  )
+
+tab0$est_cs <- map(tab0$est_cutscore, ~ .x$est_cs)
+tab0$est_cp <- map(tab0$est_cutscore, ~ .x$est_cp)
+tab0$selected_CP <- map(tab0$est_cutscore, ~ .x$selected_CP)
 ####################################################
 tab1 <- list()
+# tab1$res <- tab1_group_out(tab0, information, modal = F)
 tab1$res <-
   map2(tab0$est_cs, tab0$selected_CP,
     tab1_group_out, information$base_data$WESS,
@@ -73,7 +74,7 @@ tab1$median_res_com <-
 
 # For Median Table output ready
 tab1$median_table <- gen_median_output(tab1$median_res_com)
-
+###############################################################3
 # modal Cut Score Estimate
 est_cutscore <- tab0$est_cs
 
@@ -92,7 +93,7 @@ tab1$modal_est_cp_all <- map(tab1$modal_est_cutscore_all, ~ .x$est_cp)
 tab1$modal_selected_cp_all <-
   map(tab1$modal_est_cutscore_all, ~ .x$selected_CP)
 
-tab1$modal_res <-
+tab1$modal_res <- # tab1_group_out(tab1, information, modal = T)
   map2(tab1$modal_est_cs, tab1$modal_selected_cp,
     tab1_group_out,
     information$base_data$WESS,
